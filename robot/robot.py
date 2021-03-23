@@ -7,7 +7,7 @@ import robot.settings as settings
 class Main(Robot):
     def __init__(self, args):
         self.methods = get_all_Methods(self)
-        print(args)
+        print("aaaaaargs---->", args)
         if args is not None:
             self.robotId = args['RobotId']
             self.ExecutionId = args['ExecutionId']
@@ -29,7 +29,7 @@ class Main(Robot):
     def init(self):
         '''Init variables, instance objects and start the applications you are going to work with'''
 
-        self.browser = ChromeBrowser(undetectable=True)
+        self.browser = ChromeBrowser()
 
     @Robotmethod
     def run(self):
