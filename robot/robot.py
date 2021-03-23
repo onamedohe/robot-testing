@@ -1,5 +1,4 @@
 import time
-import ccc
 from iBott.robot_activities import Robot, Queue, Item, RobotException, Robotmethod, get_all_Methods
 from iBott.browser_activities import ChromeBrowser
 import robot.settings as settings
