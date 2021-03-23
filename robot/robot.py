@@ -1,5 +1,8 @@
-from iBott.robot_activities import Robot, RobotException, Robotmethod, get_all_Methods
+import time
+import ccc
+from iBott.robot_activities import Robot, Queue, Item, RobotException, Robotmethod, get_all_Methods
 from iBott.browser_activities import ChromeBrowser
+import robot.settings as settings
 
 
 class Main(Robot):
@@ -18,76 +21,85 @@ class Main(Robot):
         else:
             super().__init__()
 
-    @Robotmethod
     def cleanup(self):
-        """Clean system before executing the robot"""
-
+        '''Clean system before executing the robot'''
         pass
 
-    @Robotmethod
-    def start(self):
-        """Init variables, instance objects and start the applications you are going to work with"""
+    def init(self):
+        '''Init variables, instance objects and start the applications you are going to work with'''
 
-        self.browser = ChromeBrowser()
+        self.browser = ChromeBrowser(undetectable=True)
+
+    def run(self):
+        '''Run robot process'''
+
         self.browser.open()
-
-        pass
-
-    @Robotmethod
-    def process(self):
-        """Run robot process"""
-
         self.Log.log("Chrome Browser Oppen")
-        self.browser.get("https://google.com")
-        element = "/html/body/div[1]/div[3]/form/div[2]/div[1]/div[1]/div/div[2]/input"
-        texto = "gatitos"
+        self.browser.get("http://google.com")
 
-        self.browser.switch_to.frame(self.browser.find_element_by_tag_name("iframe"))
-
-        if self.browser.element_exists("Xpath", "//*[contains(text(),'Acepto')]"):
+        if self.browser.element_exists("tag_name", "iframe"):
+            iframe = self.browser.find_element_by_tag_name("iframe")
+            self.browser.switch_to.frame(iframe)
             acceptButton = self.browser.find_element_by_xpath("//*[contains(text(),'Acepto')]")
             acceptButton.click()
-        self.browser.switch_to.default_content()
+            self.browser.switch_to.default_content()
 
-        elemento_buscador = self.browser.find_element_by_xpath(element)
-        # hacemos click sobre el elemento e introducimos el texto
-        elemento_buscador.click()
-        elemento_buscador.send_keys(texto)
-        #pulsamos el boton Enter
-        self.browser.enter(elemento_buscador)
+            time.sleep(1)
 
-    @Robotmethod
+            Xpathelement = "//input[@name='q']"
+
+            # localizar el elemento
+            element = self.browser.find_element_by_xpath(Xpathelement)
+
+            # hacemos click sobre el elemento
+            element.click()
+
+            # escribirmos el texto sobre el elemento
+            buscar_texto = "gatitos"
+            element.send_keys(buscar_texto)
+            # presionamos enter sobre el elemento
+            self.browser.enter(element)
+            position = 90
+            self.browser.scrolldown(position)
+
+            # localizamos los elementos con la clase "s75CSd"
+            related_keywords = self.browser.find_elements_by_class_name("s75CSd")
+
+            self.queue = Queue(self.robotId, self.url, self.token, queueName="Gatitos")
+
+            self.Log.debug("Queue Creada satisfactoriamente")
+            # Itereamos por la lista de elementos para extraer su texto
+            for k in related_keywords:
+                self.queue.createItem({'gatito': k.text})
+                self.Log.log(k.text)
+
     def end(self):
-        """Finish robot execution, cleanup environment, close applications and send reports"""
+        '''Finish robot execution, cleanup enviroment, close applications and send reports'''
+
         self.browser.close()
-        self.finishExecution()
 
 
-class BusinessException(RobotException):
+class BusinessException(Main, Exception):
     '''Manage Exceptions Caused by business errors'''
 
-    def _init__(self,  message, action):
-        super().__init__(get_instances(Main), action)
+    def init(self, message, action):
         self.action = action
         self.message = message
         self.processException()
 
     def processException(self):
         self.Log.businessException(self.message)
+        pass
 
 
-class SystemException(RobotException):
+class SystemException(Main, Exception):
     '''Manage Exceptions Caused by system errors'''
 
-    def __init__(self, message, action):
-        super().__init__(get_instances(Main), action)
-        self.retry_times = 1
+    def init(self, message, action):
         self.action = action
         self.message = message
         self.processException()
 
     def processException(self):
-        """
         self.Log.systemException(self.message)
-        
-
+        pass
