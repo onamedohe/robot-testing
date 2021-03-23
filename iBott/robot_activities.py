@@ -25,12 +25,11 @@ class Robot:
                 self.httpprotocol = "https://"
                 self.wsprotocol = "wss://"
                 self.url = self.url.replace("https://", "")
-            elif "http://" in self.url:
+            else:
                 self.httpprotocol = "http://"
                 self.wsprotocol = "ws://"
                 self.url = self.url.replace("http://", "")
-        else:
-            warnings.warn('Robot Data Not set')
+
 
         try:
             response = requests.post(f"{self.httpprotocol}{self.url}/api-token-auth/",
