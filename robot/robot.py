@@ -19,16 +19,18 @@ class Main(Robot):
                              params=self.robotParameters)
         else:
             super().__init__()
-
+    @Robotmethod
     def cleanup(self):
         '''Clean system before executing the robot'''
         pass
 
+    @Robotmethod
     def init(self):
         '''Init variables, instance objects and start the applications you are going to work with'''
 
         self.browser = ChromeBrowser(undetectable=True)
 
+    @Robotmethod
     def run(self):
         '''Run robot process'''
 
@@ -72,6 +74,7 @@ class Main(Robot):
                 self.queue.createItem({'gatito': k.text})
                 self.Log.log(k.text)
 
+    @Robotmethod
     def end(self):
         '''Finish robot execution, cleanup enviroment, close applications and send reports'''
 
