@@ -7,7 +7,6 @@ import robot.settings as settings
 class Main(Robot):
     def __init__(self, args):
         self.methods = get_all_Methods(self)
-        print("aaaaaargs---->", args)
         if args is not None:
             self.robotId = args['RobotId']
             self.ExecutionId = args['ExecutionId']
