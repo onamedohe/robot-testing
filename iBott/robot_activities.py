@@ -27,7 +27,7 @@ class Robot:
                 self.httpprotocol = "http://"
                 self.wsprotocol = "ws://"
                 self.url = self.url.replace("http://", "")
-         self.Log = self.Log(self)
+        self.Log = self.Log(self)
 
 
         try:
