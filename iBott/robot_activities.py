@@ -137,6 +137,7 @@ class Queue:
 
         self.token = token
         self.robotId = robotId
+        self.url = url
         self.__retryTimes = 1
         if self.url is not None:
             if "https://" in self.url:
