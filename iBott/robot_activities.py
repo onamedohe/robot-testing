@@ -209,6 +209,17 @@ class Item(Queue):
 
         self.QueueId = queueId
         self.url = url
+        if self.url is not None:
+            if "https://" in self.url:
+                self.httpprotocol = "https://"
+                self.wsprotocol = "wss://"
+                self.url = self.url.replace("https://", "")
+            else:
+                self.httpprotocol = "http://"
+                self.wsprotocol = "ws://"
+                self.url = self.url.replace("http://", "")
+        else:
+            warnings.warn('Robot Data Not set')        
         self.token = token
         self.itemExecutions = 0
         self.startDate = None
