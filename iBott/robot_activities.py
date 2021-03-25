@@ -18,8 +18,6 @@ class Robot:
         self.username = username
         self.password = password
         self.params = params
-        self.Log = self.Log(self)
-
         if self.url is not None:
             if "https://" in self.url:
                 self.httpprotocol = "https://"
@@ -29,6 +27,7 @@ class Robot:
                 self.httpprotocol = "http://"
                 self.wsprotocol = "ws://"
                 self.url = self.url.replace("http://", "")
+         self.Log = self.Log(self)
 
 
         try:
@@ -137,16 +136,18 @@ class Queue:
         """Queue constructor"""
 
         self.token = token
-        self.url = url
         self.robotId = robotId
         self.__retryTimes = 1
         if self.url is not None:
             if "https://" in self.url:
                 self.httpprotocol = "https://"
                 self.wsprotocol = "wss://"
-            elif "http://" in self.url:
+                self.url = self.url.replace("https://", "")
+            else:
                 self.httpprotocol = "http://"
                 self.wsprotocol = "ws://"
+                self.url = self.url.replace("http://", "")
+
         else:
             warnings.warn('Robot Data Not set')
 
